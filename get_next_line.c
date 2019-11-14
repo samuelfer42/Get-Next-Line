@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sfernand <sfernand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: safernan <safernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/28 15:36:26 by sfernand          #+#    #+#             */
-/*   Updated: 2018/11/29 12:50:42 by sfernand         ###   ########.fr       */
+/*   Created: 2019/11/04 22:18:59 by safernan          #+#    #+#             */
+/*   Updated: 2019/11/14 19:09:27 by safernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static char	*readline(const int fd, char *buff, int *ret)
 {
 	char	tmp[BUFF_SIZE + 1];
 	char	*tmp2;
-
+	
 	*ret = read(fd, tmp, BUFF_SIZE);
 	tmp[*ret] = '\0';
 	tmp2 = buff;
@@ -45,19 +45,26 @@ int			get_next_line(const int fd, char **line)
 		return (-1);
 	while (ret > 0)
 	{
+		if (!(buff = readline(fd, buff, &ret)))
+			return (-1);
 		if ((str = ft_strchr(buff, '\n')) != NULL)
 		{
+			printf("%s", "1\n");
 			*str = '\0';
 			if (!(*line = ft_strdup(buff)))
 				return (-1);
+
 			ft_memmove(buff, str + 1, ft_strlen(str + 1) + 1);
+			printf("%s", "2\n");
 			return (1);
 		}
-		if (!(buff = readline(fd, buff, &ret)))
-			return (-1);
 	}
 	ft_strdel(&str);
+	printf("%s", "free str");
 	if (ret == 0 && ft_strlen(buff))
+	{
+		printf("%s", "ret == 0\n");
 		ret = ft_cpy_end(&(*line), &buff);
+	}
 	return (ret);
 }
